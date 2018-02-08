@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-
+import Input from './Input'
+import Address from './Address'
 
 /**
 * @description Represents a bookshelf
 * @constructor
 */
 class Supplier extends Component {
-	static propTypes = {
-		
-	}
+
 
 
   state = {
@@ -24,12 +22,35 @@ class Supplier extends Component {
 	* for each item
 	*/
 	render() {
-		const {supplier} = this.props
 
 		return (
-			<div className="bookshelf">
-				<h2>TEST</h2>
-				<h2 className="bookshelf-title">{this.state.supplier.name}</h2>
+			<div className="supplier-frame">
+
+        		<Input
+					id = "name"
+					label = "Company name"
+				/>
+
+				<Input
+					id = "abn"
+					label = "ABN"
+				/>
+
+        		<Input
+					id = "email"
+					label = "Email"
+					type = "email"
+				/>
+
+				<Input
+					id = "phone"
+					label = "Main phone"
+					type="tel"
+				/>
+
+				<Address/>
+
+        		<button className="submit-button">Save</button>
         	</div>
 	  )
 	}
