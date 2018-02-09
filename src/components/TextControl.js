@@ -8,10 +8,10 @@ import React from 'react'
 export const TextControl = (props) => {
 	return (
 		<div className="input">
-			<label className="input-label">Country</label>
+			<label className="input-label">{props.id}</label>
 			<input id={props.id} type="text"
 			       value={props.value}
-			       onChange={(e) => this.refreshText(e)} />
+			       onChange={(e) => props.refresh(e)} />
 		</div>
 	)
 }

@@ -107,33 +107,15 @@ class Address extends Component {
 						   onChange={(event) => this.updateQuery(event.target.value)} />
 				</div>
 
-				<div className="input">
-					<label className="input-label">City</label>
-					<input id="locality" type="text"
-						   value={locality}
-						   onChange={(e) => this.refreshText(e)} />
-				</div>
+				{Object.keys(this.state.address).map((e) => (
+					<TextControl
+						id = {e}
+						value = {this.state.address[e]}
+						refresh = {this.refreshText}
+					/>
+					))
+				}
 
-				<div className="input">
-					<label className="input-label">State</label>
-					<input id="administrative_area_level_1" type="text"
-						   value={administrative_area_level_1}
-						   onChange={(e) => this.refreshText(e)} />
-				</div>
-
-				<div className="input">
-					<label className="input-label">Postcode</label>
-					<input id="postal_code" type="text"
-						   value={postal_code}
-						   onChange={(e) => this.refreshText(e)} />
-				</div>
-
-				<div className="input">
-					<label className="input-label">Country</label>
-					<input id="country" type="text"
-					       value={country}
-					       onChange={(e) => this.refreshText(e)} />
-				</div>
         	</div>
 	  )
 	}
