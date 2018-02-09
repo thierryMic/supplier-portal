@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {placify} from './utils/places'
+import {TextControl} from './components/TextControl'
 
 /**
 * @description Represents a bookshelf
@@ -7,102 +8,132 @@ import {placify} from './utils/places'
 */
 class Address extends Component {
 
-
-
  	state = {
     /**
     * @description books - the list of all books in the user's library
     */
-    	acService:{},
-    	geoCoderService:{},
-    	suggestions:[],
-    	streetNumber:'',
-    	streetName:'',
-    	city:'',
-    	state:'',
-    	postcode:'',
-    	country:'',
+    	ac:{},
+    	address:{
+    		street_number:'',
+    		route:'',
+    		locality:'',
+    		administrative_area_level_1:'',
+    		postal_code:'',
+    		country:''
+    	}
   	}
 
-
-  	provideSuggestions = (r) => {
-		this.setState({suggestions:r});
-	}
-
-	fillAddress = (address) => {
-		console.log(address);
-		const details = address[0].address_components
-
-		this.setState({
-			streetNumber:details[0].short_name,
-			streetName:details[1].short_name,
-			city:details[2].short_name,
-			state:details[4].short_name,
-			postcode:details[6].short_name,
-			country:details[5].long_name,
-		});
-	}
-
 	updateQuery = (q) => {
-		console.log(q);
-		this.setState({streetName:q});
+		this.setState(prevState => ({
+		    address: {
+		        ...prevState.address,
+		        street_number:'',
+		        route:q.trimLeft()
+		    }
+		}))
 
-		const place = this.state.suggestions.filter((s)=> s.description === q)[0];
-		place && this.state.geoCoderService.geocode({placeId:place.place_id}, this.fillAddress);
-
-		this.state.acService.getPlacePredictions({input:q, componentRestrictions:{country:'au'}}, this.provideSuggestions);
     }
+
+    refreshText = (e) => {
+    	let change = {};
+    	change[e.target.id] = e.target.value
+
+		this.setState(prevState => ({
+		    address: {
+		        ...prevState.address,
+		        ...change
+		    }
+		}))
+    }
+
+
+	fillAddress = () => {
+		try {
+			const place = this.state.ac.getPlace().address_components;
+			let newAddress = {};
+
+			place.forEach((addressComponent) => {
+				addressComponent.types.forEach((componentType) => {
+					if (componentType in this.state.address) {
+						if (componentType === "administrative_area_level_1")
+						{
+							newAddress[componentType]=addressComponent.short_name;
+						} else {
+							newAddress[componentType]=addressComponent.long_name;
+						}
+
+					}
+				})
+			})
+
+
+			this.setState(prevState => ({
+			    address: {
+			        ...prevState.address,
+			        ...newAddress
+			    }
+			}))
+
+		}
+		catch(e) {
+			console.log(e);
+		}
+	}
+
 
   	componentDidMount = () => {
 
   		placify().then(() => {
-  			const ac = new window.google.maps.places.AutocompleteService;
-  			const geo = new window.google.maps.Geocoder;
-  			this.setState({acService:ac, geoCoderService:geo});
+  			const ac = new window.google.maps.places.Autocomplete((document.getElementById('route')), {types: ['address']});
+  			ac.setComponentRestrictions({'country': ['au']});
+  			ac.addListener('place_changed', this.fillAddress);
+
+  			this.setState({ac:ac});
   		})
 
   	}
 
 
-
 	render() {
-		const {streetNumber, streetName, city, state, postcode, country} = this.state;
+		const {street_number, route, locality, administrative_area_level_1, postal_code, country} = this.state.address;
 
 		return (
 			<div className="address-box">
 
 				<div className="input">
 					<label className="input-label">Street </label>
-					<input list="streetSuggestions" onChange={(e) => this.updateQuery(e.target.value)} value={streetName} />
-						<datalist id="streetSuggestions">
-	               			{this.state.suggestions.map((s) =>
-	                    		<option key={s.place_id} id={s.place_id} value={s.description} />
-	                		)}
-	                	</datalist>
+					<input id="route" type="text"
+						   value={street_number + " " + route}
+						   onChange={(event) => this.updateQuery(event.target.value)} />
 				</div>
-
 
 				<div className="input">
 					<label className="input-label">City</label>
-					<input id="city" type="text" value={city}/>
+					<input id="locality" type="text"
+						   value={locality}
+						   onChange={(e) => this.refreshText(e)} />
 				</div>
 
 				<div className="input">
 					<label className="input-label">State</label>
-					<input id="state" type="text" value={state}/>
+					<input id="administrative_area_level_1" type="text"
+						   value={administrative_area_level_1}
+						   onChange={(e) => this.refreshText(e)} />
 				</div>
 
 				<div className="input">
 					<label className="input-label">Postcode</label>
-					<input id="postcode" type="text" value={postcode}/>
+					<input id="postal_code" type="text"
+						   value={postal_code}
+						   onChange={(e) => this.refreshText(e)} />
 				</div>
 
 				<div className="input">
 					<label className="input-label">Country</label>
-					<input id="Country" type="text"value={country}/>
+					<input id="country" type="text"
+					       value={country}
+					       onChange={(e) => this.refreshText(e)} />
 				</div>
-
-
         	</div>
 	  )
 	}
