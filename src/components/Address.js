@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import {placify} from './utils/places'
-
+import {placify} from '../utils/places'
 
 /**
 * @description Represents a bookshelf
@@ -88,7 +87,7 @@ class Address extends Component {
   			ac.setComponentRestrictions({'country': ['au']});
   			ac.addListener('place_changed', this.fillAddress);
 
-  			this.setState({ac:ac});
+  			this.setState({ac:ac, address:this.props.initial});
   		})
 
   	}
@@ -99,6 +98,8 @@ class Address extends Component {
 
 		return (
 			<div className="address-box">
+
+				<h4>Address</h4>
 
 				<div className="input">
 					<label className="input-label">Street </label>

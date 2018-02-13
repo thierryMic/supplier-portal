@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import Input from './Input'
-import Address from './Address'
-
+import Input from './components/Input'
+import Address from './components/Address'
+import {BankDetails} from './components/BankDetails'
+import {Contact} from './components/Contact'
 /**
 * @description Represents a bookshelf
 * @constructor
@@ -14,7 +15,35 @@ class Supplier extends Component {
     /**
     * @description books - the list of all books in the user's library
     */
-    	supplier: {name:"testSupplier"},
+    	supplier: {name:"testSupplier",
+    			   abn:"",
+    			   acn:"",
+    			   phone:"",
+    			   acName:"",
+    			   bsb:"",
+    			   ac:"",
+    			   address:{}
+    			},
+  	}
+
+
+
+  	componentDidMount = (
+  		fetch(`http://localhost:8000/supplier/JSON/1`)
+  			.then((result) => result.json())
+  			.then((supp) => this.setState({supplier:supp}))
+	)
+
+  	refreshText = (e) => {
+    	let change = {};
+    	change[e.target.id] = e.target.value
+
+		this.setState(prevState => ({
+		    supplier: {
+		        ...prevState.supplier,
+		        ...change
+		    }
+		}))
   	}
 
 	/**
@@ -24,32 +53,22 @@ class Supplier extends Component {
 	render() {
 
 		return (
-			<div className="supplier-frame">
+			<div className="container">
+				<div>
+					<h4>General</h4>
+	        		<Input id = "name" label = "Company name" value={this.state.supplier.name} refreshText={this.refreshText} />
+					<Input id = "acn" label = "ACN" value={this.state.supplier.acn} refreshText={this.refreshText} />
+					<Input id = "abn" label = "ABN" value={this.state.supplier.abn} refreshText={this.refreshText} />
+					<Input id = "phone" label = "Main phone" type="tel" value={this.state.supplier.phone} refreshText={this.refreshText} />
+				</div>
 
-        		<Input
-					id = "name"
-					label = "Company name"
-				/>
 
-				<Input
-					id = "abn"
-					label = "ABN"
-				/>
+				<BankDetails supplier={this.state.supplier} refreshText={this.refreshText} />
+				{console.log(this.state.supplier.address)}
+				<Address initial = {this.state.supplier.address} />
 
-        		<Input
-					id = "email"
-					label = "Email"
-					type = "email"
-				/>
-
-				<Input
-					id = "phone"
-					label = "Main phone"
-					type="tel"
-				/>
-
-				<Address/>
-
+				<Contact header = "Primary contact" />
+				<Contact header = "Accounts receivable" />
         		<button className="submit-button">Save</button>
         	</div>
 	  )
