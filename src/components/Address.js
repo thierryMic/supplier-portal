@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {placify} from '../utils/places'
-
+import Input from './Input'
 /**
 * @description Represents a bookshelf
 * @constructor
@@ -12,14 +12,14 @@ class Address extends Component {
     * @description books - the list of all books in the user's library
     */
     	ac:{},
-    	address:{
-    		street_number:'',
-    		route:'',
-    		locality:'',
-    		administrative_area_level_1:'',
-    		postal_code:'',
-    		country:''
-    	}
+    	// address:{
+    	// 	street_number:'',
+    	// 	route:'',
+    	// 	locality:'',
+    	// 	administrative_area_level_1:'',
+    	// 	postal_code:'',
+    	// 	country:''
+    	// }
   	}
 
 	updateQuery = (q) => {
@@ -33,17 +33,17 @@ class Address extends Component {
 
     }
 
-    refreshText = (e) => {
-    	let change = {};
-    	change[e.target.id] = e.target.value
+  //   refreshText = (e) => {
+  //   	let change = {};
+  //   	change[e.target.id] = e.target.value
 
-		this.setState(prevState => ({
-		    address: {
-		        ...prevState.address,
-		        ...change
-		    }
-		}))
-    }
+		// this.setState(prevState => ({
+		//     address: {
+		//         ...prevState.address,
+		//         ...change
+		//     }
+		// }))
+  //   }
 
 
 	fillAddress = () => {
@@ -65,13 +65,7 @@ class Address extends Component {
 				})
 			})
 
-
-			this.setState(prevState => ({
-			    address: {
-			        ...prevState.address,
-			        ...newAddress
-			    }
-			}))
+			this.props.loadGoogleAddress(newAddress);
 
 		}
 		catch(e) {
@@ -94,7 +88,8 @@ class Address extends Component {
 
 
 	render() {
-		const {street_number, route, locality, administrative_area_level_1, postal_code, country} = this.state.address;
+		const {street_number, route, locality, administrative_area_level_1, postal_code, country} = this.props.supplier.address;
+
 
 		return (
 			<div className="address-box">
@@ -108,33 +103,25 @@ class Address extends Component {
 						   onChange={(event) => this.updateQuery(event.target.value)} />
 				</div>
 
-				<div className="input">
-					<label className="input-label">City</label>
-					<input id="locality" type="text"
-						   value={locality}
-						   onChange={(e) => this.refreshText(e)} />
-				</div>
+				<Input id="locality" label="City"
+					   value={locality}
+					   refreshText={this.props.refreshText} />
 
-				<div className="input">
-					<label className="input-label">State</label>
-					<input id="administrative_area_level_1" type="text"
-						   value={administrative_area_level_1}
-						   onChange={(e) => this.refreshText(e)} />
-				</div>
 
-				<div className="input">
-					<label className="input-label">Postcode</label>
-					<input id="postal_code" type="text"
-						   value={postal_code}
-						   onChange={(e) => this.refreshText(e)} />
-				</div>
 
-				<div className="input">
-					<label className="input-label">Country</label>
-					<input id="country" type="text"
-					       value={country}
-					       onChange={(e) => this.refreshText(e)} />
-				</div>
+				<Input id="administrative_area_level_1" label="State"
+					   value={administrative_area_level_1}
+					   refreshText={this.props.refreshText} />
+
+
+				<Input id="postal_code" label="Postcode"
+					   value={postal_code}
+					   refreshText={this.props.refreshText} />
+
+				<Input id="country" label="Country"
+				       value={country}
+				       refreshText={this.props.refreshText} />
+
         	</div>
 	  )
 	}

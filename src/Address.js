@@ -8,20 +8,6 @@ import {placify} from './utils/places'
 */
 class Address extends Component {
 
- 	state = {
-    /**
-    * @description books - the list of all books in the user's library
-    */
-    	ac:{},
-    	address:{
-    		street_number:'',
-    		route:'',
-    		locality:'',
-    		administrative_area_level_1:'',
-    		postal_code:'',
-    		country:''
-    	}
-  	}
 
 	updateQuery = (q) => {
 		this.setState(prevState => ({
