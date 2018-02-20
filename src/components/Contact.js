@@ -6,14 +6,18 @@ import Input from './Input'
 * @constructor
 */
 export const Contact = (props) => {
+
+	const { name, title, email, phone, mobile } = props.contact
+	const { edit, uid} = props
+
 	return (
-		<div>
-			<h4>{props.header}</h4>
-			<Input id = "Name" label = "Name" />
-			<Input id = "Title" label = "Title"/>
-			<Input id = "email" label = "Email"/>
-			<Input id = "mainPhone" label = "Phone"/>
-			<Input id = "mobile" label = "Mobile"/>
-		</div>
+			<div>
+				<h4>{props.header}</h4>
+				<Input id="name" label="Name" value={name} edit={edit} uid={uid} />
+				<Input id="title" label="Title" value={title} edit={edit} uid={uid} />
+				<Input id="email" label="Email" value={email} edit={edit} uid={uid} />
+				<Input id="phone" label="Phone" value={phone} edit={edit} uid={uid} />
+				<Input id="mobile" label="Mobile" value={mobile} edit={edit} uid={uid} />
+			</div>
 	)
 }

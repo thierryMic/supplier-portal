@@ -5,8 +5,8 @@ import {BankDetails} from './components/BankDetails'
 import {Contact} from './components/Contact'
 
 import { connect } from 'react-redux'
-import {bindActionCreators} from 'redux'
-import { loadSupplier } from './actions/supplierActions'
+import { bindActionCreators } from 'redux'
+import { loadSupplier, editSupplier, loadAddress, editAddress, editContact } from './actions/supplierActions'
 /**
 * @description Represents a bookshelf
 * @constructor
@@ -16,7 +16,7 @@ class Supplier extends Component {
   	componentDidMount = (
   		fetch(`http://localhost:8000/supplier/JSON/1`)
   			.then((result) => result.json())
-  			.then((supp) => this.props.loadSupplier({supplier:supp}))
+  			.then((supp) => this.props.loadSupplier(supp))
 	)
 
 	/**
@@ -25,22 +25,38 @@ class Supplier extends Component {
 	*/
 	render() {
 
+		const {supplier, editSupplier, editAddress, loadAddress, editContact} = this.props;
+		const {name, acn, abn, phone, contacts, primaryContactId, arContactId } = this.props.supplier;
+
 		return (
 			<div className="container">
 				<div>
 					<h4>General</h4>
-	        		<Input id = "name" label = "Company name" value={this.props.supplier.name} refreshText={this.refreshText} />
-					<Input id = "acn" label = "ACN" value={this.props.supplier.acn} refreshText={this.refreshText} />
-					<Input id = "abn" label = "ABN" value={this.props.supplier.abn} refreshText={this.refreshText} />
-					<Input id = "phone" label = "Main phone" type="tel" value={this.props.supplier.phone} refreshText={this.refreshText} />
+	        		<Input id = "name" label = "Company name" value={name} edit={editSupplier} />
+					<Input id = "acn" label = "ACN" value={acn} edit={editSupplier} />
+					<Input id = "abn" label = "ABN" value={abn} edit={editSupplier} />
+					<Input id = "phone" label = "Main phone" type="tel" value={phone} edit={editSupplier} />
 				</div>
 
 
-				<Address supplier={this.props.supplier} refreshText={this.refreshAddress} loadGoogleAddress={this.loadGoogleAddress} />
-				<BankDetails supplier={this.props.supplier} refreshText={this.refreshText} />
+				<Address supplier={supplier} edit={editAddress} load={loadAddress} />
+				<BankDetails supplier={supplier} edit={editSupplier} />
 
-				<Contact header = "Primary contact" />
-				<Contact header = "Accounts receivable" />
+				{ contacts[primaryContactId] &&
+					<Contact header = "Primary contact"
+							 contact={contacts[primaryContactId]}
+							 edit={editContact}
+							 uid="1"
+							 />
+				}
+
+				{ contacts[primaryContactId] &&
+					<Contact header = "Accounts receivable contact"
+							 contact={contacts[arContactId]}
+							 edit={editContact}
+							 uid="2"
+							 />
+				}
         		<button className="submit-button">Save</button>
         	</div>
 	  )
@@ -55,7 +71,11 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps(dispatch) {
 	return bindActionCreators({
-		loadSupplier:loadSupplier,
+		loadSupplier,
+		editSupplier,
+		editAddress,
+		loadAddress,
+		editContact
 	},dispatch)
 }
 

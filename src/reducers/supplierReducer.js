@@ -1,24 +1,50 @@
 /**
 * @description books - the list of all books in the user's library
 */
-const supplier = {name:"testSupplier",
+
+const supplier = {name:"",
 			      abn:"",
 			      acn:"",
 			      phone:"",
 			      acName:"",
 			      bsb:"",
 			      ac:"",
-			      address:{}
+			      address:{route:""},
+			      contacts:{}
 			 }
 
 
 export default function reducer(state=supplier, action) {
+
 	switch (action.type) {
-		case "LOAD_SUPPLIER": {
+
+		case "EDIT_SUPPLIER": {
 			return {...state,
-					...action.payload.supplier
+					...action.payload
 			};
 		}
+
+		case "EDIT_ADDRESS": {
+			return {...state,
+					address: {
+						...state.address,
+						...action.payload
+					},
+			};
+		}
+
+		case "EDIT_CONTACT": {
+			return {...state,
+					contacts:{
+						...state.contacts,
+						[action.id]:{
+							...state.contacts[action.id],
+							...action.payload
+						}
+					}
+					}
+			};
+
 
 		default: {
 			return state;

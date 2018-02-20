@@ -6,12 +6,16 @@ import Input from './Input'
 * @constructor
 */
 export const BankDetails = (props) => {
+
+	const { edit } = props
+	const { acName, bsb, acNumber } = props.supplier;
+
 	return (
 		<div>
 			<h4>Bank details</h4>
-			<Input id = "acName" label = "Account name" value={props.supplier.acName} refreshText={props.refreshText} />
-			<Input id = "bsb" label = "Bsb" value={props.supplier.bsb} refreshText={props.refreshText} />
-			<Input id = "acNumber" label = "Account number" value={props.supplier.acNumber} refreshText={props.refreshText} />
+			<Input id = "acName" label = "Account name" value={acName} edit={edit} />
+			<Input id = "bsb" label = "Bsb" value={bsb} edit={edit} />
+			<Input id = "acNumber" label = "Account number" value={acNumber} edit={edit} />
 		</div>
 	)
 }

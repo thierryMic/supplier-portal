@@ -8,17 +8,21 @@ import React from 'react'
 
 
 
-const Input = (props) => (
-	<div className="input">
-		<label className="input-label">{props.label}</label>
-		<input
-			id={props.id}
-			className="input-text"
-			type={props.type ? props.type : "text"}
-			value={props.value}
-			onChange={(event) => props.refreshText(event)}
-		/>
-	</div>
-)
+const Input = (props) => {
+	const { label, id, type, value, edit, uid } = props
+
+	return(
+		<div className="input">
+			<label className="input-label">{label}</label>
+			<input
+				id={id}
+				className="input-text"
+				type={type ? type : "text"}
+				value={value}
+				onChange={(event) => edit(event, uid)}
+			/>
+		</div>
+		)
+}
 
 export default Input
