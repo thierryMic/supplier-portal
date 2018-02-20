@@ -14,7 +14,7 @@ import { loadSupplier, editSupplier, loadAddress, editAddress, loadContacts, edi
 class Supplier extends Component {
 
 	loadRecord = (supplier) => {
-		this.props.loadSupplier(supplier);
+		this.props.loadSupplier(supplier.supplier);
 		this.props.loadContacts(supplier.contacts);
 	}
 
@@ -47,21 +47,17 @@ class Supplier extends Component {
 				<Address supplier={supplier} edit={editAddress} load={loadAddress} />
 				<BankDetails supplier={supplier} edit={editSupplier} />
 
-				{ contacts[primaryContactId] &&
-					<Contact header = "Primary contact"
-							 contact={contacts[primaryContactId]}
-							 edit={editContact}
-							 uid="1"
-							 />
+				<Contact header = "Primary contact"
+						 contact={contacts[primaryContactId] || {}}
+						 edit={editContact}
+					/>
 				}
 
-				{ contacts[primaryContactId] &&
-					<Contact header = "Accounts receivable contact"
-							 contact={contacts[arContactId]}
-							 edit={editContact}
-							 uid="2"
-							 />
-				}
+				<Contact header = "Accounts receivable contact"
+						 contact={contacts[arContactId] || {}}
+						 edit={editContact}
+					/>
+
         		<button className="submit-button">Save</button>
         	</div>
 	  )
