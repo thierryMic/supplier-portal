@@ -1,5 +1,6 @@
 const EDIT_SUPPLIER = 'EDIT_SUPPLIER';
 const EDIT_ADDRESS = 'EDIT_ADDRESS';
+const LOAD_CONTACTS = 'LOAD_CONTACTS';
 const EDIT_CONTACT = 'EDIT_CONTACT';
 
 
@@ -41,6 +42,13 @@ export function editAddress (e) {
 	}
 }
 
+
+export function loadContacts (contacts) {
+	return {
+		type: LOAD_CONTACTS,
+		payload: contacts,
+	}
+}
 
 export function editContact (e, uid) {
 	let change = {};

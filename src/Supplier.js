@@ -6,17 +6,22 @@ import {Contact} from './components/Contact'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { loadSupplier, editSupplier, loadAddress, editAddress, editContact } from './actions/supplierActions'
+import { loadSupplier, editSupplier, loadAddress, editAddress, loadContacts, editContact } from './actions/supplierActions'
 /**
 * @description Represents a bookshelf
 * @constructor
 */
 class Supplier extends Component {
 
+	loadRecord = (supplier) => {
+		this.props.loadSupplier(supplier);
+		this.props.loadContacts(supplier.contacts);
+	}
+
   	componentDidMount = (
   		fetch(`http://localhost:8000/supplier/JSON/1`)
   			.then((result) => result.json())
-  			.then((supp) => this.props.loadSupplier(supp))
+  			.then((supplier) => this.loadRecord(supplier))
 	)
 
 	/**
@@ -25,8 +30,8 @@ class Supplier extends Component {
 	*/
 	render() {
 
-		const {supplier, editSupplier, editAddress, loadAddress, editContact} = this.props;
-		const {name, acn, abn, phone, contacts, primaryContactId, arContactId } = this.props.supplier;
+		const {supplier, contacts, editSupplier, editAddress, loadAddress, editContact} = this.props;
+		const {name, acn, abn, phone, primaryContactId, arContactId } = this.props.supplier;
 
 		return (
 			<div className="container">
@@ -65,7 +70,8 @@ class Supplier extends Component {
 
 function mapStateToProps (state) {
 	return {
-		supplier:state.supplier
+		supplier:state.supplier,
+		contacts:state.contacts
 	}
 }
 
@@ -75,7 +81,8 @@ function mapDispatchToProps(dispatch) {
 		editSupplier,
 		editAddress,
 		loadAddress,
-		editContact
+		loadContacts,
+		editContact,
 	},dispatch)
 }
 
